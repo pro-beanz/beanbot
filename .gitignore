@@ -1,5 +1,6 @@
-/backup
+backup/
 token
 *.json
 *.jar
 .*/
+target/
