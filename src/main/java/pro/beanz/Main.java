@@ -87,7 +87,6 @@ public class Main {
             log.error("Login failure");
             e.printStackTrace();
 
-            System.out.println("Login failed.");
             System.out.print("Remove token file [Y/n]? ");
             Scanner input = new Scanner(System.in);
             if (input.next().toLowerCase().charAt(0) == 'y') {
