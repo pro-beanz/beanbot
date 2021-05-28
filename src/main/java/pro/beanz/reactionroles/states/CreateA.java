@@ -23,11 +23,11 @@ public class CreateA extends State {
 
     @Override
     public void runMessageState(GuildMessageReceivedEvent event) {
-        String id = event.getMessage().getContentRaw();
-        if (id.matches("^\\d{18}$")) {
+        if (event.getMessage().getContentRaw().matches("^\\d{18}$")) {
             try {
                 setNextState(new CreateB(eventManager, listenerAdapter,
-                        event.getChannel().retrieveMessageById(event.getMessage().getContentRaw()).complete()));
+                        event.getChannel().retrieveMessageById(event.getMessage().getContentRaw()).complete()
+                ));
                 event.getMessage().delete().queue();
             } catch (ErrorResponseException e) {}
         }

@@ -10,7 +10,7 @@ public class Start extends State {
         super(eventManager, listenerAdapter);
         options.put("1️⃣", new CreateA(eventManager, listenerAdapter));
         options.put("2️⃣", new RemoveA(eventManager, listenerAdapter));
-        // TODO
+        options.put("3️⃣", new ModifyA(eventManager, listenerAdapter));
     }
 
     @Override

@@ -9,15 +9,14 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import pro.beanz.reactionroles.ReactionRoleListener;
 import pro.beanz.reactionroles.json.JsonReaction;
 import pro.beanz.reactionroles.json.JsonRole;
 
-public class CreateC extends State {
+public class ModifyC extends State {
     private Message target;
     private ReactionEmote reactionEmote;
 
-    public CreateC(IEventManager eventManager, ListenerAdapter listenerAdapter,
+    public ModifyC(IEventManager eventManager, ListenerAdapter listenerAdapter,
             Message target, ReactionEmote reactionEmote) {
         super(eventManager, listenerAdapter);
         this.target = target;
@@ -28,11 +27,12 @@ public class CreateC extends State {
     public MessageEmbed getMessageEmbed() {
         EmbedBuilder builder = new ReactionRoleEmbedBuilder();
 
+        
         builder.setDescription("Input the ID of the role you would like to link to this emote");
-
+        
         return builder.build();
     }
-
+    
     @Override
     public void runReactionState(GuildMessageReactionAddEvent event) {
         String reaction = event.getReactionEmote().getName();
@@ -56,26 +56,19 @@ public class CreateC extends State {
             Role role = event.getGuild().getRoleById(id);
             if (role != null) {
                 event.getMessage().delete().queue();
-
-                ReactionRoleListener listener = (ReactionRoleListener) eventManager.getRegisteredListeners().get(1);
-
+                
                 JsonReaction reaction;
                 if (reactionEmote.isEmote()) {
                     reaction = new JsonReaction(JsonReaction.EMOTE, reactionEmote.getEmote().getId());
                 } else {
                     reaction = new JsonReaction(JsonReaction.EMOJI, reactionEmote.getEmoji());
                 }
-
-                if (listener.addReactionRole(target.getChannel().getIdLong(), target.getIdLong(),
-                        reaction, new JsonRole(role.getIdLong()))) {
-                    setNextState(new CreateLoopCheck(eventManager, listenerAdapter, target));
-                }
+                
+                setNextState(new ModifyD(eventManager, listenerAdapter,
+                    target, reaction, new JsonRole(role.getIdLong())
+                ));
+                // }
             }
         }
-    }
-
-    @Override
-    public long getTargetId() {
-        return target.getIdLong();
     }
 }

@@ -11,27 +11,30 @@ import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pro.beanz.reactionroles.ReactionRoleListener;
 import pro.beanz.reactionroles.json.JsonReaction;
+import pro.beanz.reactionroles.json.JsonRole;
 
-public class RemoveC extends State {
-    private Message target;
-    private JsonReaction reaction;
+public class ModifyD extends State {
+    Message target;
+    JsonReaction reaction;
+    JsonRole role;
 
-    public RemoveC(IEventManager eventManager, ListenerAdapter listenerAdapter,
-            Message target, JsonReaction reaction) {
+    public ModifyD(IEventManager eventManager, ListenerAdapter listenerAdapter,
+            Message target, JsonReaction reaction, JsonRole role) {
         super(eventManager, listenerAdapter);
         this.target = target;
         this.reaction = reaction;
+        this.role = role;
     }
 
     @Override
     public MessageEmbed getMessageEmbed() {
         EmbedBuilder builder = new ReactionRoleEmbedBuilder();
 
-        builder.setDescription("Toggle again to confirm.");
+        builder.setDescription(("Toggle reaction again to confirm"));
 
         return builder.build();
     }
-
+    
     public void run(GenericGuildEvent event) {
         GenericGuildMessageReactionEvent e = (GenericGuildMessageReactionEvent) event;
         Long messageId = e.getMessageIdLong();
@@ -46,21 +49,13 @@ public class RemoveC extends State {
 
             if (reaction.equals(newReaction)) {
                 ReactionRoleListener listener = (ReactionRoleListener) eventManager.getRegisteredListeners().get(1);
-                listener.removeReactionRole(messageId, reaction);
-                if (listener.containsMessage(messageId)) {
-                    listener.removeReactionRole(messageId);
-                }
+                listener.addReactionRole(target.getChannel().getIdLong(),
+                    target.getIdLong(), reaction, role);
                 
-                listener.removeReactionRole(messageId, reaction);
-                if (reaction.isEmote()) {
-                    target.clearReactions(reactionEmote.getEmote()).queue();
-                } else {
-                    target.clearReactions(reactionEmote.getEmoji()).queue();
-                }
 
                 // iterate state
                 if (listener.containsMessage(messageId)) {
-                    setNextState(new RemoveLoopCheck(eventManager, listenerAdapter, target));
+                    setNextState(new ModifyLoopCheck(eventManager, listenerAdapter, target));
                 } else {
                     setNextState(new Exit(eventManager, listenerAdapter));
                 }

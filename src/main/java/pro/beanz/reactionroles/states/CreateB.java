@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class CreateB extends State {
     private Message target;
 
-    public CreateB(IEventManager eventManager, ListenerAdapter listenerAdapter, Message target) {
+    public CreateB(IEventManager eventManager, ListenerAdapter listenerAdapter,
+            Message target) {
         super(eventManager, listenerAdapter);
         this.target = target;
     }

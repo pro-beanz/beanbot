@@ -18,6 +18,8 @@ import pro.beanz.commands.lib.CommandData;
 import pro.beanz.reactionroles.ReactionRoleListener;
 import pro.beanz.reactionroles.states.CreateB;
 import pro.beanz.reactionroles.states.Exit;
+import pro.beanz.reactionroles.states.ModifyB;
+import pro.beanz.reactionroles.states.ModifyD;
 import pro.beanz.reactionroles.states.RemoveB;
 import pro.beanz.reactionroles.states.RemoveC;
 import pro.beanz.reactionroles.states.Start;
@@ -95,7 +97,9 @@ public class ReactionRoleSetup extends Command {
         public void onGenericGuildMessageReaction(GenericGuildMessageReactionEvent event) {
             if (event.getUserIdLong() == callerId &&
                     (state instanceof RemoveB ||
-                    state instanceof RemoveC)) {
+                    state instanceof RemoveC ||
+                    state instanceof ModifyB ||
+                    state instanceof ModifyD)) {
                 runAction(event);
             }
         }
