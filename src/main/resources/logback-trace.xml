@@ -1,0 +1,31 @@
+<configuration>
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %c{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="output" class="ch.qos.logback.core.FileAppender">
+        <file>./data/logs/output.log</file>
+        <append>false</append>
+        <immediateFlush>true</immediateFlush>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %c{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="trace" class="ch.qos.logback.core.FileAppender">
+        <file>./data/logs/trace.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level %c{0} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="TRACE">
+        <appender-ref ref="console" />
+        <appender-ref ref="output" />
+        <appender-ref ref="trace" />
+    </root>
+</configuration>
