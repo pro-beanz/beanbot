@@ -37,11 +37,8 @@ public class Ping extends Command {
             throw new PermissionException(PERMISSION_ERROR);
         }
 
-        long time = System.currentTimeMillis();
-        event.getMessage().reply("Pong!").queue(response -> {
-            long ping = System.currentTimeMillis() - time;
-            log.info(String.format("%dms", ping));
-            response.editMessageFormat("Pong! My ping is %dms", ping).queue();
-        });
+        event.getJDA().getRestPing().queue((ping) ->
+            event.getMessage().replyFormat("pong! my ping is %dms", ping).queue()
+        );
     }
 }
