@@ -40,7 +40,7 @@ public class Main {
                 logConfig = "logback-trace.xml";
             }
         }
-        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(logConfig);
+        InputStream inputStream = Main.class.getClassLoader().getResourceAsStream("logback/" + logConfig);
         configurator.setContext(loggerContext);
         configurator.doConfigure(inputStream);
         assert inputStream != null;
