@@ -19,7 +19,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IDEA ###
-.idea/
+/.idea/
 
 ### VS Code ###
 .vscode/
