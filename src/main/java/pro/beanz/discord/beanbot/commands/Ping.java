@@ -4,6 +4,8 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.commands.lib.CommandData;
 
@@ -27,12 +29,19 @@ import pro.beanz.discord.beanbot.commands.lib.CommandData;
 )
 
 public class Ping extends Command {
+    private static final Logger log = LoggerFactory.getLogger(Ping.class);
+
     @Override
     public void execute(MessageReceivedEvent event, String[] args) {
         if (event.isFromGuild() && !botPermissionCheck(event)) {
             throw new PermissionException(PERMISSION_ERROR);
         }
 
-        event.getChannel().sendMessage("Pong!").queue();
+        long time = System.currentTimeMillis();
+        event.getChannel().sendMessage("Pong!").queue(response -> {
+            long ping = System.currentTimeMillis() - time;
+            log.info(String.format("%dms", ping));
+            response.editMessageFormat("Pong! My ping is %dms", ping).queue();
+        });
     }
 }
