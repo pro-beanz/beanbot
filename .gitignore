@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.gitignore
 
 ### STS ###
 .apt_generated
@@ -17,8 +18,11 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 
+### IDEA ###
+.idea/
+
 ### VS Code ###
 .vscode/
 
-### program output files ###
+### Program Output Files ###
 data/
