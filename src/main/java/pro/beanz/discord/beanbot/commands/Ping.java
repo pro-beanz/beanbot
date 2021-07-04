@@ -38,7 +38,7 @@ public class Ping extends Command {
         }
 
         long time = System.currentTimeMillis();
-        event.getChannel().sendMessage("Pong!").queue(response -> {
+        event.getMessage().reply("Pong!").queue(response -> {
             long ping = System.currentTimeMillis() - time;
             log.info(String.format("%dms", ping));
             response.editMessageFormat("Pong! My ping is %dms", ping).queue();
