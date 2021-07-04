@@ -110,31 +110,27 @@ public class Main {
         }
     }
 
-    private static List<Permission> getRequiredPermissions() {
-        List<Permission> list = new ArrayList<>();
+    private static HashSet<Permission> getRequiredPermissions() {
+        HashSet<Permission> set = new HashSet<>();
         for (Command command : commandListener.getCommands()) {
-            for (Permission permission : command.getBotPermissions()) {
-                if (!list.contains(permission)) list.add(permission);
-            }
+            set.addAll(Arrays.asList(command.getBotPermissions()));
         }
 
         // log required permissions
-        log.debug(list.toString());
+        log.debug(set.toString());
 
-        return list;
+        return set;
     }
 
-    private static List<GatewayIntent> getRequiredIntents() {
-        List<GatewayIntent> list = new ArrayList<>();
+    private static HashSet<GatewayIntent> getRequiredIntents() {
+        HashSet<GatewayIntent> set = new HashSet<>();
         for (Command command : commandListener.getCommands()) {
-            for (GatewayIntent gatewayIntent : command.getGatewayIntents()) {
-                if (!list.contains(gatewayIntent)) list.add(gatewayIntent);
-            }
+            set.addAll(Arrays.asList(command.getGatewayIntents()));
         }
 
         // log required gateway intents
-        log.debug(list.toString());
+        log.debug(set.toString());
 
-        return list;
+        return set;
     }
 }
