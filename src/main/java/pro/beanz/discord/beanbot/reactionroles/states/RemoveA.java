@@ -34,7 +34,7 @@ public class RemoveA extends State {
                     setNextState(new RemoveB(eventManager, listenerAdapter, message));
                     event.getMessage().delete().queue();
                 }
-            } catch (ErrorResponseException e) {}
+            } catch (ErrorResponseException ignored) {}
         }
     }
 }

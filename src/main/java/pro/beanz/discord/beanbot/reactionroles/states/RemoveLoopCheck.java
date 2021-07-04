@@ -9,8 +9,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class RemoveLoopCheck extends State {
     public RemoveLoopCheck(IEventManager eventManager, ListenerAdapter listenerAdapter, Message target) {
         super(eventManager, listenerAdapter);
-        options.put("❌", new Exit(eventManager, listenerAdapter));
-        options.put("✔", new RemoveB(eventManager, listenerAdapter, target));
+        options.put("\u274C", new Exit(eventManager, listenerAdapter));
+        options.put("\u2705", new RemoveB(eventManager, listenerAdapter, target));
     }
 
     @Override

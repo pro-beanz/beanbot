@@ -12,11 +12,9 @@ public class JsonReaction {
         this.data = data;
     }
     
-    public String getReaction() { return data; };
+    public String getReaction() { return data; }
     
     public boolean isEmote() { return type == EMOTE; }
-    
-    public boolean isEmoji() { return type == EMOJI; }
 
     public boolean equals(JsonReaction other) {
         return type == other.type &&

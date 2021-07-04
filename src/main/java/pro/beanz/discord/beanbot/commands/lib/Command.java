@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public abstract class Command {
-    protected final String PERMISSION_ERROR = "$TARGET has insufficient permissions.";
+    protected final String PERMISSION_ERROR = "TARGET has insufficient permissions.";
     protected final String PRIVATE_MESSAGE_ERROR = "You may only run this command in a server.";
 
     private CommandData getCommandData() {
@@ -51,6 +51,7 @@ public abstract class Command {
 
     public boolean userPermissionCheck(MessageReceivedEvent event) throws NullPointerException {
         Member user = event.getMember();
+        assert user != null;
         return user.hasPermission(getCallerPermissions()) || user.hasPermission(Permission.ADMINISTRATOR);
     }
 

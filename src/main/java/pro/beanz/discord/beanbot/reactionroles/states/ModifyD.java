@@ -37,7 +37,7 @@ public class ModifyD extends State {
     
     public void run(GenericGuildEvent event) {
         GenericGuildMessageReactionEvent e = (GenericGuildMessageReactionEvent) event;
-        Long messageId = e.getMessageIdLong();
+        long messageId = e.getMessageIdLong();
         if (messageId == target.getIdLong()) {
             ReactionEmote reactionEmote = e.getReactionEmote();
             JsonReaction newReaction;

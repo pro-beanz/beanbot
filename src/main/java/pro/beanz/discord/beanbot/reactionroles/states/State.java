@@ -1,9 +1,5 @@
 package pro.beanz.discord.beanbot.reactionroles.states;
 
-import java.awt.Color;
-import java.util.Map;
-import java.util.TreeMap;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
@@ -16,18 +12,19 @@ import pro.beanz.discord.beanbot.reactionroles.ReactionRoleListener;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonRole;
 
-public abstract class State {
-    protected final int EMOTE = 0;
-    protected final int EMOJI = 1;
+import java.awt.*;
+import java.util.Map;
+import java.util.TreeMap;
 
+public abstract class State {
     protected final Map<String, State> options;
     protected final IEventManager eventManager;
     protected final ListenerAdapter listenerAdapter;
     private State nextState = this;
 
     public State(IEventManager eventManager, ListenerAdapter listenerAdapter) {
-        options = new TreeMap<String, State>();
-        options.put("❌", new Exit(eventManager, listenerAdapter));
+        options = new TreeMap<>();
+        options.put("\u274C", new Exit(eventManager, listenerAdapter));
         this.eventManager = eventManager;
         this.listenerAdapter = listenerAdapter;
     }
@@ -38,7 +35,7 @@ public abstract class State {
         this.listenerAdapter = listenerAdapter;
     }
 
-    public State nextState() { return nextState; };
+    public State nextState() { return nextState; }
     
     public Map<String, State> getValidReactions() { return options; }
     
@@ -51,7 +48,7 @@ public abstract class State {
             if (reaction.equals(validReaction))
                 nextState = options.get(reaction);
         }
-    };
+    }
     
     public void runMessageState(GuildMessageReceivedEvent event) {}
 
@@ -80,7 +77,7 @@ public abstract class State {
         return listener.containsReaction(messageId, reaction);
     }
 
-    protected class ReactionRoleEmbedBuilder extends EmbedBuilder {
+    protected static class ReactionRoleEmbedBuilder extends EmbedBuilder {
         public ReactionRoleEmbedBuilder() {
             super();
             setColor(Color.MAGENTA);

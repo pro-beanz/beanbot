@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 
 public class RemoveB extends State {
-    private Message target;
+    private final Message target;
 
     public RemoveB(IEventManager eventManager, ListenerAdapter listenerAdapter, Message target) {
         super(eventManager, listenerAdapter);
@@ -31,7 +31,7 @@ public class RemoveB extends State {
     @Override
     public void run(GenericGuildEvent event) {
         GenericGuildMessageReactionEvent e = (GenericGuildMessageReactionEvent) event;
-        Long messageId = e.getMessageIdLong();
+        long messageId = e.getMessageIdLong();
         if (messageId == target.getIdLong()) {
             ReactionEmote reactionEmote = e.getReactionEmote();
             JsonReaction reaction;

@@ -1,23 +1,5 @@
 package pro.beanz.discord.beanbot;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-
-import javax.security.auth.login.LoginException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -28,9 +10,17 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pro.beanz.discord.beanbot.commands.CommandListener;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.reactionroles.ReactionRoleListener;
+
+import javax.security.auth.login.LoginException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class Main {
     private static Logger log;
@@ -53,6 +43,7 @@ public class Main {
         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(logConfig);
         configurator.setContext(loggerContext);
         configurator.doConfigure(inputStream);
+        assert inputStream != null;
         inputStream.close();
         log = loggerContext.getLogger(Main.class);
 
@@ -71,7 +62,7 @@ public class Main {
             if (dataDir.exists()) {
                 if (!dataDir.isDirectory()) {
                     Files.move(dataDir.toPath(), Paths.get(String.format(
-                        "%s_%s", dataDir.getName(), new Date().toString().replaceAll(" ", "-"))));
+                            "%s_%s", dataDir.getName(), new Date().toString().replaceAll(" ", "-"))));
                 }
             }
             dataDir.mkdir();
@@ -86,8 +77,8 @@ public class Main {
             // set up listeners
             commandListener = new CommandListener();
             ListenerAdapter[] listeners = {
-                commandListener,
-                new ReactionRoleListener()
+                    commandListener,
+                    new ReactionRoleListener()
             };
 
             // set up bot
@@ -106,20 +97,6 @@ public class Main {
 
             // generate invite link with required permissions
             log.info(jda.getInviteUrl(getRequiredPermissions()));
-
-            Scanner input = new Scanner(System.in);
-            boolean running = true;
-            while (running) {
-                String command = input.next();
-                if (command.toLowerCase().equals("stop")) {
-                    running = false;
-                    log.info("Received stop command, shutting down...");
-                    jda.shutdownNow();
-                } else {
-                    log.info(String.format("%s is an invalid command.", command));
-                }
-            }
-            input.close();
         } catch (LoginException e) {
             log.error("Login failure");
             e.printStackTrace();
@@ -134,7 +111,7 @@ public class Main {
     }
 
     private static List<Permission> getRequiredPermissions() {
-        List<Permission> list = new ArrayList<Permission>();
+        List<Permission> list = new ArrayList<>();
         for (Command command : commandListener.getCommands()) {
             for (Permission permission : command.getBotPermissions()) {
                 if (!list.contains(permission)) list.add(permission);
@@ -148,7 +125,7 @@ public class Main {
     }
 
     private static List<GatewayIntent> getRequiredIntents() {
-        List<GatewayIntent> list = new ArrayList<GatewayIntent>();
+        List<GatewayIntent> list = new ArrayList<>();
         for (Command command : commandListener.getCommands()) {
             for (GatewayIntent gatewayIntent : command.getGatewayIntents()) {
                 if (!list.contains(gatewayIntent)) list.add(gatewayIntent);

@@ -1,28 +1,17 @@
 package pro.beanz.discord.beanbot.reactionroles.json;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class JsonMessage {
     private final Long channelId;
-    private final Long messageId;
     private final Map<JsonReaction, JsonRole> pairs;
-    
-    public JsonMessage(Long channelId, Long messageId) {
-        this.channelId = channelId;
-        this.messageId = messageId;
-        this.pairs = new HashMap<>();
-    }
 
-    public JsonMessage(Long channelId, Long messageId, Map<JsonReaction, JsonRole> pairs) {
+    public JsonMessage(Long channelId, Map<JsonReaction, JsonRole> pairs) {
         this.channelId = channelId;
-        this.messageId = messageId;
         this.pairs = pairs;
     }
 
     public Long getChannelId() { return channelId; }
-
-    public Long getMessageId() { return messageId; }
 
     public Map<JsonReaction, JsonRole> getPairs() { return pairs; }
 

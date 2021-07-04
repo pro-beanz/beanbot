@@ -1,9 +1,9 @@
 package pro.beanz.discord.beanbot.reactionroles.json;
 
 public class JsonRole {
-    private final Long id;
+    private final long id;
 
-    public JsonRole(Long id) {
+    public JsonRole(long id) {
         this.id = id;
     }
 

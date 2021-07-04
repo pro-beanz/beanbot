@@ -29,7 +29,7 @@ public class CreateA extends State {
                         event.getChannel().retrieveMessageById(event.getMessage().getContentRaw()).complete()
                 ));
                 event.getMessage().delete().queue();
-            } catch (ErrorResponseException e) {}
+            } catch (ErrorResponseException ignored) {}
         }
     }
 }

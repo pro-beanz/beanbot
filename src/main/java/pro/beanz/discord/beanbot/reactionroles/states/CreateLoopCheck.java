@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class CreateLoopCheck extends State {
     public CreateLoopCheck(IEventManager eventManager, ListenerAdapter listenerAdapter, Message target) {
         super(eventManager, listenerAdapter);
-        options.put("✔", new CreateB(eventManager, listenerAdapter, target));
+        options.put("\u2705", new CreateB(eventManager, listenerAdapter, target));
     }
 
     @Override

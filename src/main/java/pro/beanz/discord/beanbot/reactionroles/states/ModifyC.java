@@ -13,8 +13,8 @@ import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonRole;
 
 public class ModifyC extends State {
-    private Message target;
-    private ReactionEmote reactionEmote;
+    private final Message target;
+    private final ReactionEmote reactionEmote;
 
     public ModifyC(IEventManager eventManager, ListenerAdapter listenerAdapter,
             Message target, ReactionEmote reactionEmote) {

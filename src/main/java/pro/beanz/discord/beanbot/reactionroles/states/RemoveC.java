@@ -13,8 +13,8 @@ import pro.beanz.discord.beanbot.reactionroles.ReactionRoleListener;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 
 public class RemoveC extends State {
-    private Message target;
-    private JsonReaction reaction;
+    private final Message target;
+    private final JsonReaction reaction;
 
     public RemoveC(IEventManager eventManager, ListenerAdapter listenerAdapter,
             Message target, JsonReaction reaction) {

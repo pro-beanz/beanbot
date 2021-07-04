@@ -1,5 +1,6 @@
 package pro.beanz.discord.beanbot.commands;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,12 +11,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 
 public class CommandListener extends ListenerAdapter {
-    private static Logger log = LoggerFactory.getLogger(CommandListener.class);
+    private static final Logger log = LoggerFactory.getLogger(CommandListener.class);
 
-    private Command[] commands = {
-        new Help(),
-        new Ping(),
-        new ReactionRoleSetup()
+    private final Command[] commands = {
+            new Help(),
+            new Ping(),
+            new ReactionRoleSetup()
     };
 
     public final char prefix = '/';
@@ -27,7 +28,7 @@ public class CommandListener extends ListenerAdapter {
     }
 
     @Override
-    public void onReady(ReadyEvent event) {
+    public void onReady(@NotNull ReadyEvent event) {
     }
 
     @Override
@@ -40,8 +41,7 @@ public class CommandListener extends ListenerAdapter {
         String input = message[0].substring(1);
 
         String[] args = new String[message.length - 1];
-        for (int i = 1; i < message.length; i++)
-            args[i - 1] = message[i];
+        System.arraycopy(message, 1, args, 0, message.length - 1);
 
         log.info(event.getAuthor().getAsTag() + " executed " + input);
 

@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class ModifyLoopCheck extends State {
     public ModifyLoopCheck(IEventManager eventManager, ListenerAdapter listenerAdapter, Message target) {
         super(eventManager, listenerAdapter);
-        options.put("✔", new ModifyB(eventManager, listenerAdapter, target));
+        options.put("\u2705", new ModifyB(eventManager, listenerAdapter, target));
     }
 
     @Override

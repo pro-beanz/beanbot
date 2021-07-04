@@ -7,7 +7,7 @@ import pro.beanz.discord.beanbot.commands.ReactionRoleSetup.SetupListener;
 
 public class Exit extends State {
     public Exit(IEventManager eventManager, ListenerAdapter listenerAdapter) {
-        super(eventManager, (SetupListener) listenerAdapter, false);
+        super(eventManager, listenerAdapter, false);
     }
 
     @Override

@@ -1,21 +1,22 @@
 package pro.beanz.discord.beanbot.reactionroles.states;
 
-import java.util.List;
-
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.MessageReaction.ReactionEmote;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.IEventManager;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.List;
+import java.util.Objects;
+
 public class CreateB extends State {
-    private Message target;
+    private final Message target;
 
     public CreateB(IEventManager eventManager, ListenerAdapter listenerAdapter,
             Message target) {
@@ -34,7 +35,7 @@ public class CreateB extends State {
 
     @Override
     public void runReactionState(GuildMessageReactionAddEvent event) {
-        Long messageId = event.getMessageIdLong();
+        long messageId = event.getMessageIdLong();
         if (messageId == target.getIdLong()) {
             ReactionEmote reactionEmote = event.getReactionEmote();
 
@@ -42,9 +43,9 @@ public class CreateB extends State {
             MessageHistory history = MessageHistory.getHistoryAround(event.getChannel(), messageId + "").complete();
             List<User> users;
             if (reactionEmote.isEmote()) {
-                users = history.getMessageById(messageId).retrieveReactionUsers(reactionEmote.getEmote()).complete();
+                users = Objects.requireNonNull(history.getMessageById(messageId)).retrieveReactionUsers(reactionEmote.getEmote()).complete();
             } else {
-                users = history.getMessageById(messageId).retrieveReactionUsers(reactionEmote.getEmoji()).complete();
+                users = Objects.requireNonNull(history.getMessageById(messageId)).retrieveReactionUsers(reactionEmote.getEmoji()).complete();
             }
             JDA jda = event.getJDA();
             if (users.contains(jda.getUserById(jda.getSelfUser().getIdLong()))) {
@@ -60,7 +61,7 @@ public class CreateB extends State {
                     target.removeReaction(reactionEmote.getEmoji(), event.getUser()).queue();
                 
                 setNextState(new CreateC(eventManager, listenerAdapter, target, reactionEmote));
-            } catch (ErrorResponseException e) {}
+            } catch (ErrorResponseException ignored) {}
         } else {
             super.runReactionState(event);
         }

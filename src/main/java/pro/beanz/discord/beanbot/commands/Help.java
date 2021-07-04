@@ -9,24 +9,25 @@ import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.commands.lib.CommandData;
 
 @CommandData(
-    name = "Help",
-    description = "Displays command descriptions, usages, and triggers",
-    usage = "/help [command trigger]",
-    triggers = {
-        "help", "?"
-    },
-    callerPermissions = {
-        Permission.MESSAGE_READ,
-        Permission.MESSAGE_WRITE
-    },
-    botPermissions = {
-        Permission.MESSAGE_READ,
-        Permission.MESSAGE_EMBED_LINKS,
-        Permission.MESSAGE_WRITE
-    },
-    gatewayIntents = {
-        GatewayIntent.GUILD_MESSAGES
-    })
+        name = "Help",
+        description = "Displays command descriptions, usages, and triggers",
+        usage = "/help [command trigger]",
+        triggers = {
+                "help", "?"
+        },
+        callerPermissions = {
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_WRITE
+        },
+        botPermissions = {
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_EMBED_LINKS,
+                Permission.MESSAGE_WRITE
+        },
+        gatewayIntents = {
+                GatewayIntent.GUILD_MESSAGES
+        }
+)
 
 public class Help extends Command {
 

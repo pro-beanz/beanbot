@@ -34,7 +34,7 @@ public class ModifyA extends State {
                     setNextState(new ModifyB(eventManager, listenerAdapter, message));
                     event.getMessage().delete().queue();
                 }
-            } catch (ErrorResponseException e) {}
+            } catch (ErrorResponseException ignored) {}
         }
     }
 }

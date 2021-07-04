@@ -8,22 +8,22 @@ import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.commands.lib.CommandData;
 
 @CommandData(
-    name = "Ping",
-    description = "Pings the bot",
-    usage = "/ping",
-    triggers = { "ping" },
-    callerPermissions = {
-        Permission.MESSAGE_READ,
-        Permission.MESSAGE_WRITE
-    },
-    botPermissions = {
-        Permission.MESSAGE_READ,
-        Permission.MESSAGE_WRITE
-    },
-    gatewayIntents = {
-        GatewayIntent.DIRECT_MESSAGES,
-        GatewayIntent.GUILD_MESSAGES
-    }
+        name = "Ping",
+        description = "Pings the bot",
+        usage = "/ping",
+        triggers = {"ping"},
+        callerPermissions = {
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_WRITE
+        },
+        botPermissions = {
+                Permission.MESSAGE_READ,
+                Permission.MESSAGE_WRITE
+        },
+        gatewayIntents = {
+                GatewayIntent.DIRECT_MESSAGES,
+                GatewayIntent.GUILD_MESSAGES
+        }
 )
 
 public class Ping extends Command {
