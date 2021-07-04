@@ -30,7 +30,6 @@ import pro.beanz.discord.beanbot.commands.lib.CommandData;
 )
 
 public class Help extends Command {
-
     Command[] commands;
 
     @Override
