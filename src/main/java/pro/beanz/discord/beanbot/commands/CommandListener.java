@@ -46,7 +46,7 @@ public class CommandListener extends ListenerAdapter {
 
         for (Command command : commands) {
             for (String trigger : command.getTriggers()) {
-                if (trigger.equals(input) && command.getMinArgs() < message.length) {
+                if (trigger.equalsIgnoreCase(input) && command.getMinArgs() < message.length) {
                     try {
                         // execute command if the trigger is detected
                         command.execute(event, args);

@@ -20,8 +20,5 @@ bin/
 ### IDEA ###
 /.idea/
 
-### VS Code ###
-.vscode/
-
 ### program output files ###
 data/

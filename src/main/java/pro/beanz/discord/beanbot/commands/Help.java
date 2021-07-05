@@ -45,7 +45,7 @@ public class Help extends Command {
             String arg = args[0].toLowerCase();
             for (Command command : commands)
                 for (String trigger : command.getTriggers())
-                    if (arg.equals(trigger.toLowerCase()))
+                    if (arg.equalsIgnoreCase(trigger))
                         addCommand(builder, command, event);
         } else
             for (Command command : commands)
