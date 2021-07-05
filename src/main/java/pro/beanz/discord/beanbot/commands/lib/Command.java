@@ -25,6 +25,8 @@ public abstract class Command {
         return getCommandData().usage();
     }
 
+    public String[] getSubcommands() { return getCommandData().subcommands(); }
+
     public String[] getTriggers() {
         return getCommandData().triggers();
     }

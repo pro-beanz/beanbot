@@ -8,6 +8,10 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.commands.lib.CommandData;
 
+import java.awt.Color;
+import java.util.Arrays;
+import java.util.Comparator;
+
 @CommandData(
         name = "Help",
         description = "Displays command descriptions, usages, and triggers",
@@ -40,9 +44,10 @@ public class Help extends Command {
 
         EmbedBuilder builder = new EmbedBuilder();
         builder.setTitle("Command Help");
+        builder.setColor(Color.MAGENTA);
 
         if (args.length > 0) {
-            String arg = args[0].toLowerCase();
+            String arg = args[0];
             for (Command command : commands)
                 for (String trigger : command.getTriggers())
                     if (arg.equalsIgnoreCase(trigger))
@@ -54,18 +59,38 @@ public class Help extends Command {
         if (builder.getFields().size() == 0)
             builder.setDescription("No command(s) found");
 
-        event.getChannel().sendMessage(builder.build()).queue();
+        event.getMessage().reply(builder.build()).queue();
     }
 
     private void addCommand(EmbedBuilder builder, Command command, MessageReceivedEvent event) {
         if ((event.isFromGuild() && command.userPermissionCheck(event)
                 || !(event.isFromGuild() || command.isServerOnly()))) {
-            builder.addField(command.getName(), "Triggers: " + String.join(", ", command.getTriggers()) + "\nUsage: "
-                    + command.getUsage() + "\nDescription: " + command.getDescription(), false);
+            // subcommand detection
+            StringBuilder subCommands = new StringBuilder();
+            if (command.getSubcommands().length > 0) {
+                subCommands.append("\nSubcommands: ").append(String.join(", ", command.getSubcommands()));
+            }
+
+            // add fields
+            builder.addField(
+                    command.getName(), "Triggers: " + String.join(", ", command.getTriggers()) +
+                            "\nUsage: " + command.getUsage() +
+                            subCommands +
+                            "\nDescription: " + command.getDescription(),
+                    false
+            );
         }
     }
 
     public void addCommands(Command[] commands) {
+        Arrays.sort(commands, new CommandSort());
         this.commands = commands;
+    }
+
+    private static class CommandSort implements Comparator<Command> {
+        @Override
+        public int compare(Command c1, Command c2) {
+            return c1.getName().compareToIgnoreCase(c2.getName());
+        }
     }
 }

@@ -14,6 +14,8 @@ public @interface CommandData {
 
     String usage() default "";
 
+    String[] subcommands() default {};
+
     String[] triggers() default {};
 
     Permission[] callerPermissions() default {};
