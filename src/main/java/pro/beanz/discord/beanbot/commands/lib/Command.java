@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import pro.beanz.discord.beanbot.commands.CommandListener;
 
 public abstract class Command {
     protected final String PERMISSION_ERROR = "TARGET has insufficient permissions.";
@@ -65,4 +66,6 @@ public abstract class Command {
     }
 
     public abstract void execute(MessageReceivedEvent event, String[] args);
+
+    public CommandListener getCommandListener() { return null; }
 }

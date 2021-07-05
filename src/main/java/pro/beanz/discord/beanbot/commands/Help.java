@@ -8,9 +8,11 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.commands.lib.CommandData;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 @CommandData(
         name = "Help",
@@ -34,27 +36,26 @@ import java.util.Comparator;
 )
 
 public class Help extends Command {
-    Command[] commands;
+    private Command[] commands;
+    private EmbedBuilder builder;
+    private MessageReceivedEvent e;
 
     @Override
     public void execute(MessageReceivedEvent event, String[] args) {
-        if (event.isFromGuild() && !botPermissionCheck(event)) {
+        this.e = event;
+
+        if (e.isFromGuild() && !botPermissionCheck(e)) {
             throw new PermissionException(PERMISSION_ERROR);
         }
 
-        EmbedBuilder builder = new EmbedBuilder();
+        builder = new EmbedBuilder();
         builder.setTitle("Command Help");
         builder.setColor(Color.MAGENTA);
 
-        if (args.length > 0) {
-            String arg = args[0];
+        if (!argumentToCommand(new ArrayList<>(Arrays.asList(args)), (CommandListener) e.getJDA().getRegisteredListeners().get(0))) {
             for (Command command : commands)
-                for (String trigger : command.getTriggers())
-                    if (arg.equalsIgnoreCase(trigger))
-                        addCommand(builder, command, event);
-        } else
-            for (Command command : commands)
-                addCommand(builder, command, event);
+                addCommand(command);
+        }
 
         if (builder.getFields().size() == 0)
             builder.setDescription("No command(s) found");
@@ -62,9 +63,9 @@ public class Help extends Command {
         event.getMessage().reply(builder.build()).queue();
     }
 
-    private void addCommand(EmbedBuilder builder, Command command, MessageReceivedEvent event) {
-        if ((event.isFromGuild() && command.userPermissionCheck(event)
-                || !(event.isFromGuild() || command.isServerOnly()))) {
+    private void addCommand(Command command) {
+        if ((e.isFromGuild() && command.userPermissionCheck(e)
+                || !(e.isFromGuild() || command.isServerOnly()))) {
             // subcommand detection
             StringBuilder subCommands = new StringBuilder();
             if (command.getSubcommands().length > 0) {
@@ -85,6 +86,35 @@ public class Help extends Command {
     public void addCommands(Command[] commands) {
         Arrays.sort(commands, new CommandSort());
         this.commands = commands;
+    }
+
+    private boolean argumentToCommand(List<String> args, CommandListener t) {
+        // exit recursion if no args
+        if (args.size() == 0) return false;
+
+        // figure out if the first arg matches a command trigger in the listener
+        for (Command command : t.getCommands()) {
+            for (String trigger : command.getTriggers()) {
+                System.out.println(trigger);
+                // command trigger is in the listener
+                if (args.get(0).equalsIgnoreCase(trigger)) {
+
+                    // recurse without the first argument if there is a command listener for the command
+                    args.remove(0);
+                    CommandListener target = command.getCommandListener();
+                    System.out.println(String.join(" ", args));
+                    if (args.size() > 0 && target != null) {
+                        return argumentToCommand(args, target);
+                    }
+
+                    addCommand(command);
+                    return true;
+                }
+            }
+        }
+
+        // exit recursion if args do not match command triggers
+        return false;
     }
 
     private static class CommandSort implements Comparator<Command> {

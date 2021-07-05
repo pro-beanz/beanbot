@@ -132,9 +132,7 @@ public class Main {
 
     private static HashSet<Permission> getRequiredPermissions() {
         HashSet<Permission> set = new HashSet<>();
-        for (Command command : commandListener.getCommands()) {
-            set.addAll(Arrays.asList(command.getBotPermissions()));
-        }
+        getRequiredPermissionsHelper(set, commandListener);
 
         // log required permissions
         log.debug(set.toString());
@@ -142,11 +140,18 @@ public class Main {
         return set;
     }
 
+    private static void getRequiredPermissionsHelper(HashSet<Permission> set, CommandListener target) {
+        for (Command command : target.getCommands()) {
+            set.addAll(Arrays.asList(command.getBotPermissions()));
+            if (command.getCommandListener() != null) {
+                getRequiredPermissionsHelper(set, command.getCommandListener());
+            }
+        }
+    }
+
     private static HashSet<GatewayIntent> getRequiredIntents() {
         HashSet<GatewayIntent> set = new HashSet<>();
-        for (Command command : commandListener.getCommands()) {
-            set.addAll(Arrays.asList(command.getGatewayIntents()));
-        }
+        getRequiredIntentsHelper(set, commandListener);
 
         // log required gateway intents
         log.debug(set.toString());
@@ -154,11 +159,21 @@ public class Main {
         return set;
     }
 
+    private static void getRequiredIntentsHelper(HashSet<GatewayIntent> set, CommandListener target) {
+        for (Command command : target.getCommands()) {
+            set.addAll(Arrays.asList(command.getGatewayIntents()));
+            if (command.getCommandListener() != null) {
+                getRequiredIntentsHelper(set, command.getCommandListener());
+            }
+        }
+    }
+
     private static boolean satisfiesPrerequisites() {
         HashSet<String> set = new HashSet<>();
-        for (Command command : commandListener.getCommands()) {
-            set.addAll(Arrays.asList(command.getPrerequisites()));
-        }
+        satisfiesPrerequisitesHelper(set, commandListener);
+
+        // log prerequisites
+        log.debug(set.toString());
 
         boolean satisfied = true;
         final String[] paths = getenv("PATH").split(quote(pathSeparator));
@@ -173,5 +188,14 @@ public class Main {
         }
 
         return satisfied;
+    }
+
+    private static void satisfiesPrerequisitesHelper(HashSet<String> set, CommandListener target) {
+        for (Command command : target.getCommands()) {
+            set.addAll(Arrays.asList(command.getPrerequisites()));
+            if (command.getCommandListener() != null) {
+                satisfiesPrerequisitesHelper(set, command.getCommandListener());
+            }
+        }
     }
 }

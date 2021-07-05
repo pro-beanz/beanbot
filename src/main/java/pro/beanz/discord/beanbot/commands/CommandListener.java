@@ -13,18 +13,28 @@ public class CommandListener extends ListenerAdapter {
     private final Command[] commands;
     private final char prefix;
 
+    // for the primary command listener
     public CommandListener(char prefix, Command[] commands) {
         super();
-        this.commands = commands;
         this.prefix = prefix;
+        this.commands = commands;
         ((Help) commands[0]).addCommands(commands);
+        log.info("Ready");
+    }
+
+    // for subcommand listeners
+    public CommandListener(Command[] commands) {
+        super();
+        this.prefix = ' '; // whitespace prefix denotes no prefix
+        this.commands = commands;
         log.info("Ready");
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        // do nothing for bot messages
-        if (event.getAuthor().isBot() || event.getMessage().getContentRaw().charAt(0) != prefix)
+        // do nothing for bot messages or messages not beginning with the prefix
+        // but only if there is a prefix
+        if (event.getAuthor().isBot() || (prefix != ' ' && event.getMessage().getContentRaw().charAt(0) != prefix))
             return;
 
         String[] message = event.getMessage().getContentRaw().trim().split(" ");
@@ -41,7 +51,6 @@ public class CommandListener extends ListenerAdapter {
                     try {
                         // execute command if the trigger is detected
                         command.execute(event, args);
-                        log.info(command.getName() + " executed");
                     } catch (NullPointerException | PermissionException e) {
                         // catch and display any error messages in command execution
                         // mainly limited to permissions and private message restrictions
