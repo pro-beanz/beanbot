@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pro.beanz.discord.beanbot.commands.CommandListener;
+import pro.beanz.discord.beanbot.commands.Help;
+import pro.beanz.discord.beanbot.commands.Ping;
+import pro.beanz.discord.beanbot.commands.ReactionRoleSetup;
 import pro.beanz.discord.beanbot.commands.lib.Command;
 import pro.beanz.discord.beanbot.reactionroles.ReactionRoleListener;
 
@@ -83,7 +86,12 @@ public class Main {
 
         try {
             // set up listeners
-            commandListener = new CommandListener();
+            Command[] commands = {
+                    new Help(),
+                    new Ping(),
+                    new ReactionRoleSetup()
+            };
+            commandListener = new CommandListener('/', commands);
             ListenerAdapter[] listeners = {
                     commandListener,
                     new ReactionRoleListener()

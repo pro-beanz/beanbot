@@ -10,16 +10,13 @@ import pro.beanz.discord.beanbot.commands.lib.Command;
 public class CommandListener extends ListenerAdapter {
     private static final Logger log = LoggerFactory.getLogger(CommandListener.class);
 
-    private final Command[] commands = {
-            new Help(),
-            new Ping(),
-            new ReactionRoleSetup()
-    };
+    private final Command[] commands;
+    private final char prefix;
 
-    public final char prefix = '/';
-
-    public CommandListener() {
+    public CommandListener(char prefix, Command[] commands) {
         super();
+        this.commands = commands;
+        this.prefix = prefix;
         ((Help) commands[0]).addCommands(commands);
         log.info("Ready");
     }
