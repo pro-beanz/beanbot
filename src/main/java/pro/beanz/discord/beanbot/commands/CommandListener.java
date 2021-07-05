@@ -41,11 +41,11 @@ public class CommandListener extends ListenerAdapter {
         String[] args = new String[message.length - 1];
         System.arraycopy(message, 1, args, 0, message.length - 1);
 
-        log.info(event.getAuthor().getAsTag() + " executed " + input);
 
         for (Command command : commands) {
             for (String trigger : command.getTriggers()) {
                 if (trigger.equalsIgnoreCase(input) && command.getMinArgs() < message.length) {
+                    log.info(event.getAuthor().getAsTag() + " executed " + input);
                     try {
                         // execute command if the trigger is detected
                         command.execute(event, args);
