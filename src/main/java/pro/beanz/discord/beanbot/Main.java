@@ -102,9 +102,17 @@ public class Main {
                         .setActivity(Activity.listening("void noises"))
                         .setEnabledIntents(getRequiredIntents());
 
-                // add listeners
+                // add main listeners
                 for (ListenerAdapter listener : listeners) {
                     builder.addEventListeners(listener);
+                }
+
+                // add subcommand listeners
+                for (Command command : commands) {
+                    CommandListener listener = command.getCommandListener();
+                    if (listener != null) {
+                        builder.addEventListeners(listener);
+                    }
                 }
 
                 // build bot

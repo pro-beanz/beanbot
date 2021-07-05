@@ -19,7 +19,6 @@ public class CommandListener extends ListenerAdapter {
         this.prefix = prefix;
         this.commands = commands;
         ((Help) commands[0]).addCommands(commands);
-        log.info("Ready");
     }
 
     // for subcommand listeners
@@ -27,7 +26,6 @@ public class CommandListener extends ListenerAdapter {
         super();
         this.prefix = ' '; // whitespace prefix denotes no prefix
         this.commands = commands;
-        log.info("Ready");
     }
 
     @Override

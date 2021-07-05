@@ -45,8 +45,6 @@ public class ReactionRoleListener extends ListenerAdapter {
         super();
 
         reloadCache();
-
-        log.info("Ready");
     }
 
     public void reloadCache() {
