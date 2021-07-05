@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pro.beanz.discord.beanbot.BeanbotHelper;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonMessage;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonRole;
@@ -56,17 +57,25 @@ public class ReactionRoleListener extends ListenerAdapter {
                     map = new HashMap<>();
                 }
             } catch (FileNotFoundException e) {
-                cacheFile.createNewFile();
+                if (!cacheFile.createNewFile()) {
+                    BeanbotHelper.insufficientFilePrivileges();
+                }
                 map = new HashMap<>();
             } catch (JsonSyntaxException e) {
                 // create new backup dir if one does not yet exist
                 File backupDir = new File("./data/backup");
-                if (!backupDir.exists()) backupDir.mkdir();
+                if (!backupDir.exists()) {
+                    if (!backupDir.mkdir()) {
+                        BeanbotHelper.insufficientFilePrivileges();
+                    }
+                }
 
                 // backup file and replace with an empty one
                 Files.move(cacheFile.toPath(), Paths.get(String.format(
                         "data/backup/%s_%s", cacheFile.getName(), new Date().toString().replaceAll(" ", "-"))));
-                cacheFile.createNewFile();
+                if (!cacheFile.createNewFile()) {
+                    BeanbotHelper.insufficientFilePrivileges();
+                }
                 map = new HashMap<>();
             }
             writeCache();
@@ -82,7 +91,9 @@ public class ReactionRoleListener extends ListenerAdapter {
             writer.close();
         } catch (FileNotFoundException e) {
             try {
-                cacheFile.createNewFile();
+                if (!cacheFile.createNewFile()) {
+                    BeanbotHelper.insufficientFilePrivileges();
+                }
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

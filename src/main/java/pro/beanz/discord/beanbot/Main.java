@@ -73,7 +73,7 @@ public class Main {
                 }
             }
             if (!dataDir.mkdir() || new File("./data/logs").mkdir()) {
-                insufficientFilePrivileges();
+                BeanbotHelper.insufficientFilePrivileges();
             }
 
             FileWriter writer = new FileWriter(tokenFile);
@@ -118,16 +118,11 @@ public class Main {
             Scanner input = new Scanner(System.in);
             if (input.next().toLowerCase().charAt(0) == 'y') {
                 if (!tokenFile.delete()) {
-                    insufficientFilePrivileges();
+                    BeanbotHelper.insufficientFilePrivileges();
                 }
             }
             input.close();
         }
-    }
-
-    private static void insufficientFilePrivileges() {
-        log.error("Insufficient file privileges.");
-        System.exit(1);
     }
 
     private static HashSet<Permission> getRequiredPermissions() {
