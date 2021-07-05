@@ -49,6 +49,8 @@ public abstract class Command {
         return getCommandData().serverOnly();
     }
 
+    public String[] getPrerequisites() { return getCommandData().prerequisites(); }
+
     public boolean userPermissionCheck(MessageReceivedEvent event) throws NullPointerException {
         Member user = event.getMember();
         assert user != null;

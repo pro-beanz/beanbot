@@ -1,10 +1,10 @@
 package pro.beanz.discord.beanbot.commands.lib;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommandData {
@@ -25,4 +25,6 @@ public @interface CommandData {
     int minimumArgs() default 0;
 
     boolean serverOnly() default false;
+
+    String[] prerequisites() default {};
 }

@@ -19,8 +19,15 @@ import pro.beanz.discord.beanbot.reactionroles.ReactionRoleListener;
 import javax.security.auth.login.LoginException;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
+
+import static java.io.File.pathSeparator;
+import static java.lang.System.getenv;
+import static java.nio.file.Files.isExecutable;
+import static java.util.regex.Pattern.quote;
 
 public class Main {
     private static Logger log;
@@ -65,8 +72,9 @@ public class Main {
                             "%s_%s", dataDir.getName(), new Date().toString().replaceAll(" ", "-"))));
                 }
             }
-            dataDir.mkdir();
-            new File("./data/logs").mkdir();
+            if (!dataDir.mkdir() || new File("./data/logs").mkdir()) {
+                insufficientFilePrivileges();
+            }
 
             FileWriter writer = new FileWriter(tokenFile);
             writer.write(token);
@@ -81,22 +89,27 @@ public class Main {
                     new ReactionRoleListener()
             };
 
-            // set up bot
-            JDABuilder builder = JDABuilder.createLight(token)
-                    .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                    .setActivity(Activity.listening("void noises"))
-                    .setEnabledIntents(getRequiredIntents());
+            // if-statement for pre-requisites like yt-dl
+            if (satisfiesPrerequisites()) {
+                // set up bot
+                JDABuilder builder = JDABuilder.createLight(token)
+                        .setStatus(OnlineStatus.DO_NOT_DISTURB)
+                        .setActivity(Activity.listening("void noises"))
+                        .setEnabledIntents(getRequiredIntents());
 
-            // add listeners
-            for (ListenerAdapter listener : listeners) {
-                builder.addEventListeners(listener);
+                // add listeners
+                for (ListenerAdapter listener : listeners) {
+                    builder.addEventListeners(listener);
+                }
+
+                // build bot
+                JDA jda = builder.build().awaitReady();
+
+                // generate invite link with required permissions
+                log.info(jda.getInviteUrl(getRequiredPermissions()));
+            } else {
+                log.error("Prerequisites are not met. Refer to https://github.com/pro-beanz/beanbot for information.");
             }
-
-            // build bot
-            JDA jda = builder.build().awaitReady();
-
-            // generate invite link with required permissions
-            log.info(jda.getInviteUrl(getRequiredPermissions()));
         } catch (LoginException e) {
             log.error("Login failure");
             e.printStackTrace();
@@ -104,10 +117,17 @@ public class Main {
             System.out.print("Remove token file [Y/n]? ");
             Scanner input = new Scanner(System.in);
             if (input.next().toLowerCase().charAt(0) == 'y') {
-                tokenFile.delete();
+                if (!tokenFile.delete()) {
+                    insufficientFilePrivileges();
+                }
             }
             input.close();
         }
+    }
+
+    private static void insufficientFilePrivileges() {
+        log.error("Insufficient file privileges.");
+        System.exit(1);
     }
 
     private static HashSet<Permission> getRequiredPermissions() {
@@ -132,5 +152,26 @@ public class Main {
         log.debug(set.toString());
 
         return set;
+    }
+
+    private static boolean satisfiesPrerequisites() {
+        HashSet<String> set = new HashSet<>();
+        for (Command command : commandListener.getCommands()) {
+            set.addAll(Arrays.asList(command.getPrerequisites()));
+        }
+
+        boolean satisfied = true;
+        final String[] paths = getenv("PATH").split(quote(pathSeparator));
+        for (String prerequisite : set) {
+            satisfied = satisfied && Stream.of(paths).map(Paths::get).anyMatch(path ->
+                    isExecutable(Path.of(path.resolve(prerequisite).toString()))
+            );
+
+            if (!satisfied) {
+                log.error(String.format("Missing prerequisite: %s", prerequisite));
+            }
+        }
+
+        return satisfied;
     }
 }
