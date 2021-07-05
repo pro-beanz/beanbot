@@ -14,12 +14,12 @@ import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonRole;
 
 public class ModifyD extends State {
-    Message target;
-    JsonReaction reaction;
-    JsonRole role;
+    final Message target;
+    final JsonReaction reaction;
+    final JsonRole role;
 
     public ModifyD(IEventManager eventManager, ListenerAdapter listenerAdapter,
-            Message target, JsonReaction reaction, JsonRole role) {
+                   Message target, JsonReaction reaction, JsonRole role) {
         super(eventManager, listenerAdapter);
         this.target = target;
         this.reaction = reaction;
@@ -34,7 +34,7 @@ public class ModifyD extends State {
 
         return builder.build();
     }
-    
+
     public void run(GenericGuildEvent event) {
         GenericGuildMessageReactionEvent e = (GenericGuildMessageReactionEvent) event;
         long messageId = e.getMessageIdLong();
@@ -49,9 +49,10 @@ public class ModifyD extends State {
 
             if (reaction.equals(newReaction)) {
                 ReactionRoleListener listener = (ReactionRoleListener) eventManager.getRegisteredListeners().get(1);
+                listener.removeReactionRole(target.getIdLong(), reaction);
                 listener.addReactionRole(target.getChannel().getIdLong(),
-                    target.getIdLong(), reaction, role);
-                
+                        target.getIdLong(), reaction, role);
+
 
                 // iterate state
                 if (listener.containsMessage(messageId)) {

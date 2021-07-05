@@ -123,7 +123,8 @@ public class ReactionRoleSetup extends Command {
 
                 // run exit sequence if state is Exit
                 if (state instanceof Exit) {
-                    state.exit();
+                    Exit exit = (Exit) state;
+                    exit.exit();
                     return;
                 }
 

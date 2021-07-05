@@ -7,13 +7,12 @@ import pro.beanz.discord.beanbot.commands.ReactionRoleSetup.SetupListener;
 
 public class Exit extends State {
     public Exit(IEventManager eventManager, ListenerAdapter listenerAdapter) {
-        super(eventManager, listenerAdapter, false);
+        super(eventManager, listenerAdapter);
     }
 
     @Override
     public MessageEmbed getMessageEmbed() { return null;  }
-    
-    @Override
+
     public void exit() {
         ((SetupListener) listenerAdapter).getConfigMessage().delete().complete();
         eventManager.unregister(listenerAdapter);
