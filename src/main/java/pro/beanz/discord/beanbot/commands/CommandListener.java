@@ -1,10 +1,8 @@
 package pro.beanz.discord.beanbot.commands;
 
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.PermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pro.beanz.discord.beanbot.commands.lib.Command;
@@ -24,10 +22,6 @@ public class CommandListener extends ListenerAdapter {
         super();
         ((Help) commands[0]).addCommands(commands);
         log.info("Ready");
-    }
-
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
     }
 
     @Override
