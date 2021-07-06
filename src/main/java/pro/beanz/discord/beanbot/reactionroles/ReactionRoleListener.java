@@ -13,8 +13,6 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import pro.beanz.discord.beanbot.BeanbotHelper;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonMessage;
 import pro.beanz.discord.beanbot.reactionroles.json.JsonReaction;
@@ -31,8 +29,6 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ReactionRoleListener extends ListenerAdapter {
-    private static final Logger log = LoggerFactory.getLogger(ReactionRoleListener.class);
-
     private final File cacheFile = new File("./data/reaction_role_cache.json");
     private final Gson gson = new GsonBuilder().setPrettyPrinting()
             .enableComplexMapKeySerialization().create();

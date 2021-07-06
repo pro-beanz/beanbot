@@ -95,14 +95,11 @@ public class Help extends Command {
         // figure out if the first arg matches a command trigger in the listener
         for (Command command : t.getCommands()) {
             for (String trigger : command.getTriggers()) {
-                System.out.println(trigger);
                 // command trigger is in the listener
                 if (args.get(0).equalsIgnoreCase(trigger)) {
-
                     // recurse without the first argument if there is a command listener for the command
                     args.remove(0);
                     CommandListener target = command.getCommandListener();
-                    System.out.println(String.join(" ", args));
                     if (args.size() > 0 && target != null) {
                         return argumentToCommand(args, target);
                     }

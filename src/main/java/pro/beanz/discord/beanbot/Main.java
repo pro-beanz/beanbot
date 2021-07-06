@@ -36,6 +36,7 @@ public class Main {
     private static Logger log;
 
     private static CommandListener commandListener;
+    public static final String prefix = "/";
 
     public static void main(String[] args) throws IOException, InterruptedException, JoranException {
         // logger configuration
@@ -92,7 +93,9 @@ public class Main {
                     new ReactionRoleSetup()
             };
 
-            commandListener = new CommandListener('/', commands);
+            ((Help) commands[0]).addCommands(commands);
+
+            commandListener = new CommandListener(new String[]{prefix}, commands);
             ListenerAdapter[] listeners = {
                     commandListener,
                     new ReactionRoleListener()
@@ -106,7 +109,7 @@ public class Main {
                         .setActivity(Activity.listening("void noises"))
                         .setEnabledIntents(getRequiredIntents());
 
-                // add main listeners
+                // add root listeners
                 for (ListenerAdapter listener : listeners) {
                     builder.addEventListeners(listener);
                 }

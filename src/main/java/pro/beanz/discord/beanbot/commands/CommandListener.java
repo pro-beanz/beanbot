@@ -11,41 +11,41 @@ public class CommandListener extends ListenerAdapter {
     private static final Logger log = LoggerFactory.getLogger(CommandListener.class);
 
     private final Command[] commands;
-    private final char prefix;
+    private final String[] triggers;
 
     // for the primary command listener
-    public CommandListener(char prefix, Command[] commands) {
+    public CommandListener(String[] triggers, Command[] commands) {
         super();
-        this.prefix = prefix;
-        this.commands = commands;
-        ((Help) commands[0]).addCommands(commands);
-    }
-
-    // for subcommand listeners
-    public CommandListener(Command[] commands) {
-        super();
-        this.prefix = ' '; // whitespace prefix denotes no prefix
+        this.triggers = triggers;
         this.commands = commands;
     }
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        // do nothing for bot messages or messages not beginning with the prefix
-        // but only if there is a prefix
-        if (event.getAuthor().isBot() || (prefix != ' ' && event.getMessage().getContentRaw().charAt(0) != prefix))
-            return;
+        // do nothing for bot messages
+        if (event.getAuthor().isBot()) return;
 
-        String[] message = event.getMessage().getContentRaw().trim().split(" ");
-        String input = message[0].substring(1);
+        // do nothing for messages not beginning with a trigger prefix
+        String prefix = "";
+        for (String trigger : triggers) {
+            if (event.getMessage().getContentRaw().startsWith(trigger)) {
+                prefix = trigger;
+                break;
+            }
+        }
+        if (prefix.equals("")) return;
+
+        String rawMessage = event.getMessage().getContentRaw().trim().substring(prefix.length());
+        String[] message = rawMessage.split(" ");
+
+        String input = message[0];
 
         String[] args = new String[message.length - 1];
         System.arraycopy(message, 1, args, 0, message.length - 1);
 
-
         for (Command command : commands) {
             for (String trigger : command.getTriggers()) {
                 if (trigger.equalsIgnoreCase(input) && command.getMinArgs() < message.length) {
-                    log.info(event.getAuthor().getAsTag() + " executed " + input);
                     try {
                         // execute command if the trigger is detected
                         command.execute(event, args);
@@ -56,6 +56,9 @@ public class CommandListener extends ListenerAdapter {
                         e.printStackTrace();
                         event.getChannel().sendMessage(e.getMessage()).queue();
                     }
+                    return;
+                } else if (trigger.equalsIgnoreCase(input)) {
+                    commands[0].execute(event, message);
                 }
             }
         }
